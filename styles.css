@@ -1,35 +1,194 @@
-* {
+/* Reset Universal Avançado */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
-body, html {
+/* Base HTML e Body */
+html {
     width: 100%;
     height: 100%;
-    background: #000;
     overflow: hidden;
-    font-family: 'Arial', sans-serif;
+    background: #000;
+    font-size: 16px;
 }
 
+body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Arial', sans-serif;
+    background: 
+        radial-gradient(circle at 50% 50%, 
+            rgba(255,255,255,0.02) 0%, 
+            rgba(0,0,0,0.8) 100%),
+        linear-gradient(45deg, #000000 0%, #0a0a2e 100%);
+    cursor: grab;
+}
+
+body:active {
+    cursor: grabbing;
+}
+
+/* Canvas Principal */
 canvas {
     position: fixed;
     top: 0;
     left: 0;
+    width: 100vw;
+    height: 100vh;
     z-index: 1;
+    image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
 }
 
+/* Overlay de Energia */
 #energyOverlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 150vmax;
+    height: 150vmax;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    pointer-events: none;
+    background: 
+        radial-gradient(circle at center, 
+            rgba(143, 0, 255, 0.15) 0%,
+            rgba(255, 0, 212, 0.1) 30%,
+            rgba(0, 0, 0, 0) 70%);
+    mix-blend-mode: screen;
+    opacity: 0.7;
+    animation: energyPulse 8s infinite linear;
+}
+
+/* Efeitos de Partículas */
+.quantum-particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    animation: particleDrift linear infinite;
+}
+
+/* Animações Chave */
+@keyframes energyPulse {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+}
+
+@keyframes particleDrift {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translate(calc(-100vw + 200px), calc(100vh - 200px));
+        opacity: 0;
+    }
+}
+
+/* Efeitos de Distorção */
+.distortion-effect {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 3;
     pointer-events: none;
-    background: radial-gradient(circle at 50% 50%, 
-        rgba(255,255,255,0) 60%,
-        rgba(143, 0, 255, 0.1) 100%);
-    mix-blend-mode: screen;
-    opacity: 0.7;
+    background: 
+        repeating-linear-gradient(45deg,
+            transparent 0%,
+            transparent 2%,
+            rgba(255,255,255,0.02) 3%,
+            transparent 5%),
+        repeating-radial-gradient(circle at 50% 50%,
+            transparent 0%,
+            rgba(255,255,255,0.03) 2%,
+            transparent 5%);
+    mix-blend-mode: overlay;
+    opacity: 0.3;
+}
+
+/* Loader de Performance */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1.5s ease;
+}
+
+.loader {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: relative;
+    animation: loaderSpin 1.2s linear infinite;
+}
+
+.loader::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: #7f00ff;
+    border-bottom-color: #e100ff;
+    filter: blur(2px);
+}
+
+@keyframes loaderSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* Ajustes Responsivos */
+@media (max-width: 768px) {
+    #energyOverlay {
+        width: 200vmax;
+        height: 200vmax;
+    }
+    
+    body {
+        cursor: default;
+    }
+}
+
+@media (orientation: portrait) {
+    canvas {
+        image-rendering: optimizeSpeed;
+    }
+}
+
+/* Prevenção de FOUT */
+body.loaded {
+    animation: fadeIn 2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
